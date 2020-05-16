@@ -1,3 +1,7 @@
+"""
+This script is used to clean up the system.
+"""
+
 import logging
 import shutil
 from argparse import ArgumentParser
@@ -96,9 +100,10 @@ if __name__ == '__main__':
         format='[%(levelname)s]: %(msg)s',
         level=logging.INFO
     )
+
     parser = namedtuple('Parser', ('main', 'subparser', 'subparsers'))(
         main := ArgumentParser(
-            prog='backup',
+            prog='clean',
             description='A script to clean the system.',
             epilog='Goodbye, world!',
             allow_abbrev=False
@@ -115,7 +120,7 @@ if __name__ == '__main__':
     # all
     parser.subparsers.all = parser.subparser.add_parser(
         'all',
-        description='Clean all the necessary files.',
+        description='Clean the system.',
         epilog='Clean all!',
         add_help=True,
         allow_abbrev=False
@@ -123,12 +128,12 @@ if __name__ == '__main__':
     parser.subparsers.all.add_argument(
         '--jetbrains',
         action='store_true',
-        help='Clean the jetbrains applications configurations.'
+        help="Remove the jetbrains applications' configurations."
     )
     parser.subparsers.all.add_argument(
         '--bleachbit-root',
         action='store_true',
-        help='Clean the jetbrains applications configurations.'
+        help="Remove the system's configurations using bleachbit."
     )
 
     # parse arguments
