@@ -1,3 +1,7 @@
+"""
+This module is in charge of backing up the specified user's data.
+"""
+
 import logging
 import os
 import tarfile
@@ -12,6 +16,7 @@ if __name__ == '__main__':
         format='[%(levelname)s]: %(msg)s',
         level=logging.INFO
     )
+
     today = datetime.today().date()
     parser = namedtuple('Parser', ('main', 'subparser', 'subparsers'))(
         main := ArgumentParser(
@@ -43,9 +48,9 @@ if __name__ == '__main__':
         help='The path to the directory which will contain the backed-up archive.'
     )
     parser.subparsers.all.add_argument(
-        '--name',
+        '--filename',
         default=f'{today.year}_{today.month:02d}_{today.day:02d}.tar.gz',
-        help='The name of the backup tar file.'
+        help='The name of the tar archive.'
     )
 
     # list
@@ -79,10 +84,10 @@ if __name__ == '__main__':
         if not Path(arguments.destination).is_dir():
             raise RuntimeError(f'The destination: {arguments.destination} is not an existing directory.')
 
-        if (filepath := Path(f'{arguments.destination}/{arguments.name}')).is_file():
-            raise RuntimeError(f'The file: {arguments.name} already exists in {arguments.destination}.')
+        if (filepath := Path(f'{arguments.destination}/{arguments.filename}')).is_file():
+            raise RuntimeError(f'The file: {arguments.filename} already exists in {arguments.destination}.')
 
-        logging.info(f'Starting backup to: {filepath}')
+        logging.info(f'Backing up the data to: {filepath}')
 
         with tarfile.open(filepath, 'w:gz') as backup_file:
             for file in files:
