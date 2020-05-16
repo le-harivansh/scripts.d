@@ -16,7 +16,7 @@ if __name__ == '__main__':
     parser = namedtuple('Parser', ('main', 'subparser', 'subparsers'))(
         main := ArgumentParser(
             prog='backup',
-            description='A utility to backup important files.',
+            description='A script to backup important files.',
             epilog='Goodbye, world!',
             allow_abbrev=False
         ),
