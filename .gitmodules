@@ -1,0 +1,3 @@
+[submodule "laravel-setup"]
+	path = laravel-setup
+	url = git@github.com:merchant-prince/laravel-setup.git
