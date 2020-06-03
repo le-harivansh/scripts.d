@@ -92,6 +92,7 @@ class Clean:
         logging.info("Removing JetBrains applications' configurations...")
         for path in Path.home().glob('.*/**/JetBrains'):
             shutil.rmtree(path)
+        shutil.rmtree(Path(f'{str(Path.home())}/.java'))
         logging.info("Removed JetBrains applications' configurations.")
 
 
