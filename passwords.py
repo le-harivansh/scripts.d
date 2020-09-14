@@ -2,8 +2,8 @@
 This module is used to back-up, and restore the user's passwords.
 """
 
-import os
 import logging
+import os
 from argparse import ArgumentParser
 from collections import namedtuple
 from pathlib import Path
@@ -96,7 +96,7 @@ if __name__ == '__main__':
             raise RuntimeError(f'The destination: {arguments.to} is not an existing directory.')
 
         if (password_file := Path(f'{arguments.to}/{arguments.filename}')).is_file():
-            raise RuntimeError(f'The file: {arguments.to} already exists in {arguments.to}.')
+            raise RuntimeError(f'The file: {arguments.filename} already exists in {arguments.to}.')
 
         credentials = {
             os.path.splitext(str(path.absolute()))[0].replace(f'{password_store_path}/', '', 1): None
@@ -112,4 +112,4 @@ if __name__ == '__main__':
             for username, password in credentials.items():
                 file.write(f'{username} {password}\n')
 
-        logging.info('Passwords backed-up')
+        logging.info('Passwords backed-up.')

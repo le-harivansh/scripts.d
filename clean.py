@@ -129,12 +129,12 @@ if __name__ == '__main__':
     parser.subparsers.all.add_argument(
         '--jetbrains',
         action='store_true',
-        help="Remove the jetbrains applications' configurations."
+        help="Clean jetbrains applications' configurations."
     )
     parser.subparsers.all.add_argument(
         '--bleachbit-root',
         action='store_true',
-        help="Remove the system's configurations using bleachbit."
+        help="Clean the system's configurations using bleachbit."
     )
 
     # parse arguments

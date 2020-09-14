@@ -33,8 +33,8 @@ if __name__ == '__main__':
     # all
     parser.subparsers.all = parser.subparser.add_parser(
         'all',
-        description='Update the system.',
-        epilog='Backup all!',
+        description='Upgrade the system.',
+        epilog='Upgrade all!',
         add_help=True,
         allow_abbrev=False
     )

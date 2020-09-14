@@ -62,20 +62,20 @@ if __name__ == '__main__':
         allow_abbrev=False
     )
 
-    files = (
+    directories = (
         Path(f'{Path.home()}/.gnupg'),
         Path(f'{Path.home()}/.password-store'),
         Path(f'{Path.home()}/.ssh'),
         Path(f'{Path.home()}/.vimrc'),
         Path(f'{Path.home()}/.zshenv'),
         Path(f'{Path.home()}/.zshrc'),
-        Path(f'{Path.home()}/.miscellaneous'),
+        Path(f'{Path.home()}/.backup'),
         Path(f'{Path.home()}/Storage/Documents')
     )
 
-    for file in files:
-        if not file.exists():
-            raise RuntimeError(f'The file {file} does not exist.')
+    for directory in directories:
+        if not directory.exists():
+            raise RuntimeError(f'The file {directory} does not exist.')
 
     # parse arguments
     arguments = parser.main.parse_args()
@@ -90,14 +90,14 @@ if __name__ == '__main__':
         logging.info(f'Backing up the data to: {filepath}')
 
         with tarfile.open(filepath, 'w:gz') as backup_file:
-            for file in files:
-                logging.info(f'Backing up {file}')
-                backup_file.add(file)
+            for directory in directories:
+                logging.info(f'Backing up {directory}...')
+                backup_file.add(directory)
 
         logging.info('Backup complete.')
 
     elif arguments.action == 'list':
         print('The following files/directories will be backed up:')
 
-        for file in files:
-            print(f'{file}')
+        for directory in directories:
+            print(f'{directory}')
