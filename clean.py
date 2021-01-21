@@ -40,12 +40,14 @@ class Clean:
         # clean journalctl
         logging.info('Cleaning journalctl...')
 
-        journalctl_vacuum_size = '50M'
-        journalctl_vacuum_time = '30days'
+        journalctl_config = {
+            'vacuum_time': '30days',
+            'vacuum_size': '50M'
+        }
 
         run(
             ('sudo', 'journalctl',
-             f'--vacuum-size={journalctl_vacuum_size}', f'--vacuum-time={journalctl_vacuum_time}'),
+             f'--vacuum-time={journalctl_config["vacuum_time"]}', f'--vacuum-size={journalctl_config["vacuum_size"]}'),
             check=True
         )
 
