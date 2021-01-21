@@ -1,5 +1,5 @@
 """
-This module is in charge of backing up the specified user's data.
+This module is in charge of backing up the current user's data.
 """
 
 import logging
@@ -13,7 +13,7 @@ from types import SimpleNamespace
 
 if __name__ == '__main__':
     logging.basicConfig(
-        format='[%(levelname)s]: %(msg)s',
+        format='[%(levelname)s] [%(asctime)s]: %(msg)s',
         level=logging.INFO
     )
 
@@ -80,6 +80,7 @@ if __name__ == '__main__':
     # parse arguments
     arguments = parser.main.parse_args()
 
+    # backup all the previously specified directories
     if arguments.action == 'all':
         if not Path(arguments.destination).is_dir():
             raise RuntimeError(f'The destination: {arguments.destination} is not an existing directory.')
@@ -96,6 +97,7 @@ if __name__ == '__main__':
 
         logging.info('Backup complete.')
 
+    # list the directories to be backed up
     elif arguments.action == 'list':
         print('The following files/directories will be backed up:')
 
