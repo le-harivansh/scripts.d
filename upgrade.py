@@ -1,5 +1,5 @@
 """
-The purpose of this script is to upgrade the system, and the packages within.
+The purpose of this script is to upgrade the system and the packages within.
 """
 
 import logging

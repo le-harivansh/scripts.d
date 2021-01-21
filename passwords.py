@@ -1,5 +1,5 @@
 """
-This module is used to back-up, and restore the user's passwords.
+This script is used to back-up and restore the user's passwords.
 """
 
 import logging

@@ -1,5 +1,5 @@
 """
-This module is in charge of backing up the current user's data.
+This script is in charge of backing up the current user's data.
 """
 
 import logging
