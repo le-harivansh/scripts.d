@@ -40,12 +40,14 @@ class Clean:
         # clean journalctl
         logging.info('Cleaning journalctl...')
 
-        journalctl_vacuum_size = '50M'
-        journalctl_vacuum_time = '30days'
+        journalctl_config = {
+            'vacuum_time': '30days',
+            'vacuum_size': '50M'
+        }
 
         run(
             ('sudo', 'journalctl',
-             f'--vacuum-size={journalctl_vacuum_size}', f'--vacuum-time={journalctl_vacuum_time}'),
+             f'--vacuum-time={journalctl_config["vacuum_time"]}', f'--vacuum-size={journalctl_config["vacuum_size"]}'),
             check=True
         )
 
@@ -79,7 +81,6 @@ class Clean:
     def yaourt() -> None:
         """Clean yaourt."""
 
-        # Remove yaourt's orphan packages
         logging.info("Removing yaourt's orphan packages...")
         run(('yaourt', '-Qdtq'))
         logging.info("Removed yaourt's orphan packages.")
@@ -88,17 +89,24 @@ class Clean:
     def jetbrains() -> None:
         """Clean JetBrains application configurations."""
 
-        # Remove JetBrain's configurations
         logging.info("Removing JetBrains applications' configurations...")
         for path in Path.home().glob('.*/**/JetBrains'):
             shutil.rmtree(path)
         shutil.rmtree(Path(f'{str(Path.home())}/.java'))
         logging.info("Removed JetBrains applications' configurations.")
 
+    @staticmethod
+    def docker() -> None:
+        """Remove all docker images, containers, networks, and volumes."""
+
+        logging.info("Purging all docker images, containers, networks, and volumes...")
+        run((f'{Path.cwd()}/docker-utilities.py', 'purge'))
+        logging.info("Purged all docker images, containers, networks, and volumes.")
+
 
 if __name__ == '__main__':
     logging.basicConfig(
-        format='[%(levelname)s]: %(msg)s',
+        format='[%(levelname)s] [%(asctime)s]: %(msg)s',
         level=logging.INFO
     )
 
@@ -137,7 +145,6 @@ if __name__ == '__main__':
         help="Clean the system's configurations using bleachbit."
     )
 
-    # parse arguments
     arguments = parser.main.parse_args()
 
     if arguments.action == 'all':
@@ -148,6 +155,7 @@ if __name__ == '__main__':
         Clean.system()
         Clean.pacman()
         Clean.yaourt()
+        Clean.docker()
 
         if arguments.jetbrains:
             Clean.jetbrains()

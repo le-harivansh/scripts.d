@@ -1,5 +1,5 @@
 """
-This module is used to back-up, and restore the user's passwords.
+This script is used to back-up and restore the user's passwords.
 """
 
 import logging
@@ -14,7 +14,7 @@ if __name__ == '__main__':
     DEFAULT_PASSWORDS_FILE_NAME = 'passwords.txt'
 
     logging.basicConfig(
-        format='[%(levelname)s]: %(msg)s',
+        format='[%(levelname)s] [%(asctime)s]: %(msg)s',
         level=logging.INFO
     )
 
@@ -72,7 +72,6 @@ if __name__ == '__main__':
         help='The name of the cleartext passwords file.'
     )
 
-    # parse arguments
     arguments = parser.main.parse_args()
 
     if arguments.action == 'import':
@@ -103,7 +102,7 @@ if __name__ == '__main__':
             for path in password_store_path.rglob("*.gpg")
         }
 
-        logging.info(f'Backing up the passwords in: {password_file}')
+        logging.info(f'Backing up the passwords in: {password_file}...')
 
         for username in credentials:
             credentials[username] = run(('pass', username), stdout=PIPE).stdout.decode('utf-8').strip()
