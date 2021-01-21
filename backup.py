@@ -77,10 +77,8 @@ if __name__ == '__main__':
         if not directory.exists():
             raise RuntimeError(f'The file {directory} does not exist.')
 
-    # parse arguments
     arguments = parser.main.parse_args()
 
-    # backup all the previously specified directories
     if arguments.action == 'all':
         if not Path(arguments.destination).is_dir():
             raise RuntimeError(f'The destination: {arguments.destination} is not an existing directory.')
@@ -97,7 +95,6 @@ if __name__ == '__main__':
 
         logging.info('Backup complete.')
 
-    # list the directories to be backed up
     elif arguments.action == 'list':
         print('The following files/directories will be backed up:')
 

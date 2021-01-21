@@ -10,7 +10,7 @@ from types import SimpleNamespace
 
 if __name__ == '__main__':
     logging.basicConfig(
-        format='[%(levelname)s]: %(msg)s',
+        format='[%(levelname)s] [%(asctime)s]: %(msg)s',
         level=logging.INFO
     )
 
@@ -44,22 +44,19 @@ if __name__ == '__main__':
         help="Refresh pacman's mirrors."
     )
 
-    # parse arguments
     arguments = parser.main.parse_args()
 
     if arguments.action == 'all':
-        logging.info('Starting update...')
+        logging.info('Starting upgrade...')
 
         if arguments.refresh_mirrors:
             logging.info("Refreshing pacman's mirrors.")
             run(('sudo', 'pacman-mirrors', '-f'), check=True)
 
-        # update pacman's packages
-        logging.info("Updating pacman's packages.")
+        logging.info("Upgrading pacman's packages...")
         run(('sudo', 'pacman', '-Syyu'), check=True)
 
-        # update yaourt's packages
-        logging.info("Updating yaourt's packages.")
+        logging.info("Upgrading yaourt's packages...")
         run(('yaourt', '-Syuua'), check=True)
 
-        logging.info('Update complete.')
+        logging.info('Upgrade complete.')
