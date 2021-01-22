@@ -63,7 +63,7 @@ if __name__ == '__main__':
     )
     parser.subparsers.export_.add_argument(
         '--to',
-        default=os.getcwd(),
+        default=f'{Path.home()}/.backup',
         help='The path to the directory which will contain the cleartext passwords file.'
     )
     parser.subparsers.export_.add_argument(
