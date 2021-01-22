@@ -53,10 +53,10 @@ if __name__ == '__main__':
             logging.info("Refreshing pacman's mirrors.")
             run(('sudo', 'pacman-mirrors', '-f'), check=True)
 
-        logging.info("Upgrading pacman's packages...")
+        logging.info("Upgrading pacman packages...")
         run(('sudo', 'pacman', '-Syyu'), check=True)
 
-        logging.info("Upgrading yaourt's packages...")
-        run(('yaourt', '-Syuua'), check=True)
+        logging.info("Upgrading AUR packages...")
+        run(('pacaur', '-Syuua'), check=True)
 
         logging.info('Upgrade complete.')
