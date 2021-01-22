@@ -95,14 +95,6 @@ class Clean:
         shutil.rmtree(Path(f'{str(Path.home())}/.java'))
         logging.info("Removed JetBrains applications' configurations.")
 
-    @staticmethod
-    def docker() -> None:
-        """Remove all docker images, containers, networks, and volumes."""
-
-        logging.info("Purging all docker images, containers, networks, and volumes...")
-        run((f'{Path.cwd()}/docker-utilities.py', 'purge'))
-        logging.info("Purged all docker images, containers, networks, and volumes.")
-
 
 if __name__ == '__main__':
     logging.basicConfig(
@@ -155,7 +147,6 @@ if __name__ == '__main__':
         Clean.system()
         Clean.pacman()
         Clean.yaourt()
-        Clean.docker()
 
         if arguments.jetbrains:
             Clean.jetbrains()
