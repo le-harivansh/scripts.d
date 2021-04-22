@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
-import os
 import tarfile
 from argparse import ArgumentParser, Namespace
 from collections import namedtuple
 from datetime import date, datetime
+from os import getcwd
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Tuple
@@ -37,7 +37,7 @@ if __name__ == '__main__':
     )
     parser.subparsers.all.add_argument(
         '--destination',
-        default=os.getcwd(),
+        default=getcwd(),
         help='The path to the directory which will contain the backed-up archive.'
     )
     parser.subparsers.all.add_argument(
