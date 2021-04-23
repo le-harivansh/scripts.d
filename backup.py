@@ -54,7 +54,7 @@ if __name__ == '__main__':
         allow_abbrev=False
     )
 
-    files: Tuple = (
+    files: Tuple[Path, ...] = (
         Path(f'{Path.home()}/.gnupg'),
         Path(f'{Path.home()}/.password-store'),
         Path(f'{Path.home()}/.ssh'),
