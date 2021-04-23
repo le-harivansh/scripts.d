@@ -37,10 +37,10 @@ if __name__ == '__main__':
             print("Refreshing pacman's mirrors...")
             run(('sudo', 'pacman-mirrors', '-f'), check=True)
 
-        print("Upgrading pacman packages...")
+        print("Upgrading pacman's packages...")
         run(('sudo', 'pacman', '-Syyu'), check=True)
 
-        print("Upgrading AUR packages...")
+        print("Upgrading AUR's packages...")
         run(('pacaur', '-Syuua'), check=True)
 
         print('Upgrade complete.')
