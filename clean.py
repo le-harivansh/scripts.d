@@ -11,7 +11,7 @@ def bleachbit(*, root: bool = False) -> None:
     """Clean the system using bleachbit."""
 
     excluded_cleaners: Tuple[str, ...] = ('system.free_disk_space', 'system.memory')
-    cleaners: Generator[str, ...] = (
+    cleaners: Generator[str] = (
         cleaner.strip()
         for cleaner in
         run(('bleachbit', '--list-cleaners'), stdout=PIPE, check=True).stdout.decode('utf-8').split()
@@ -55,7 +55,7 @@ def pacman() -> None:
 
     # Remove pacman's orphan packages
     print("Removing pacman's orphan packages...")
-    orphans: Generator[str, ...] = (orphan.strip() for orphan in
+    orphans: Generator[str] = (orphan.strip() for orphan in
                                     run(('pacman', '-Qdtq'), stdout=PIPE).stdout.decode('utf-8').split())
     run(('sudo', 'pacman', '-Rs', *orphans))
     print("Removed pacman's orphan packages.")
