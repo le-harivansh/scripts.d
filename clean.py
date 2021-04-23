@@ -1,152 +1,126 @@
-"""
-This script is used to clean up the system.
-"""
+#!/usr/bin/env python3
 
-import logging
 import shutil
-from argparse import ArgumentParser
-from collections import namedtuple
+from argparse import ArgumentParser, Namespace
 from pathlib import Path
 from subprocess import run, PIPE
-from types import SimpleNamespace
+from typing import Generator, Mapping, Tuple
 
 
-class Clean:
-    @staticmethod
-    def bleachbit(root: bool = False) -> None:
-        """Clean the system using bleachbit."""
+def bleachbit(*, root: bool = False) -> None:
+    """Clean the system using bleachbit."""
 
-        excluded_cleaners = ('system.free_disk_space', 'system.memory')
-        cleaners = (
-            cleaner.strip()
-            for cleaner in
-            run(('bleachbit', '--list-cleaners'), stdout=PIPE, check=True).stdout.decode('utf-8').split()
-            if cleaner not in excluded_cleaners
-        )
+    excluded_cleaners: Tuple[str, ...] = ('system.free_disk_space', 'system.memory')
+    cleaners: Generator[str, ...] = (
+        cleaner.strip()
+        for cleaner in
+        run(('bleachbit', '--list-cleaners'), stdout=PIPE, check=True).stdout.decode('utf-8').split()
+        if cleaner not in excluded_cleaners
+    )
 
-        command = ('bleachbit', '--clean', *cleaners)
+    command: Tuple[str, ...] = ('bleachbit', '--clean', *cleaners)
 
-        if root:
-            command = ('sudo', *command)
+    if root:
+        command = ('sudo', *command)
 
-        logging.info(f'Cleaning the {"system" if root else "user"}-space using bleachbit...')
-        run(command, check=True)
-        logging.info(f'Cleaned the {"system" if root else "user"}-space using bleachbit.')
+    print(f'Cleaning the {"system" if root else "user"}-space using bleachbit...')
+    run(command, check=True)
+    print(f'Cleaned the {"system" if root else "user"}-space using bleachbit.')
 
-    @staticmethod
-    def system() -> None:
-        """Clean the system using the various available tools."""
 
-        # clean journalctl
-        logging.info('Cleaning journalctl...')
+def system() -> None:
+    """Clean the system using the various available tools."""
 
-        journalctl_config = {
-            'vacuum_time': '30days',
-            'vacuum_size': '50M'
-        }
+    # clean journalctl
+    print('Cleaning journalctl...')
 
-        run(
-            ('sudo', 'journalctl',
-             f'--vacuum-time={journalctl_config["vacuum_time"]}', f'--vacuum-size={journalctl_config["vacuum_size"]}'),
-            check=True
-        )
+    journalctl_config: Mapping[str, str] = {
+        'vacuum_time': '30days',
+        'vacuum_size': '50M'
+    }
 
-        logging.info('Cleaned journalctl.')
+    run(
+        ('sudo', 'journalctl',
+         f'--vacuum-time={journalctl_config["vacuum_time"]}', f'--vacuum-size={journalctl_config["vacuum_size"]}'),
+        check=True
+    )
 
-    @staticmethod
-    def pacman() -> None:
-        """Clean pacman."""
+    print('Cleaned journalctl.')
 
-        logging.info('Cleaning pacman...')
 
-        # Remove pacman's orphan packages
-        logging.info("Removing pacman's orphan packages...")
-        orphans = (orphan.strip() for orphan in run(('pacman', '-Qdtq'), stdout=PIPE).stdout.decode('utf-8').split())
-        run(('sudo', 'pacman', '-Rs', *orphans))
-        logging.info("Removed pacman's orphan packages.")
+def pacman() -> None:
+    """Clean pacman."""
 
-        # Clear pacman's cache
-        logging.info("Clearing pacman's cache...")
-        run(('sudo', 'pacman', '-Scc'))
-        logging.info("Cleared pacman's cache.")
+    print('Cleaning pacman...')
 
-        # View pacdiff
-        logging.info('Viewing pacdiff...')
-        run(('sudo', 'pacdiff'))
-        logging.info('Viewed pacdiff.')
+    # Remove pacman's orphan packages
+    print("Removing pacman's orphan packages...")
+    orphans: Generator[str, ...] = (orphan.strip() for orphan in
+                                    run(('pacman', '-Qdtq'), stdout=PIPE).stdout.decode('utf-8').split())
+    run(('sudo', 'pacman', '-Rs', *orphans))
+    print("Removed pacman's orphan packages.")
 
-        logging.info('Cleaned pacman.')
+    # Clear pacman's cache
+    print("Clearing pacman's cache...")
+    run(('sudo', 'pacman', '-Scc'))
+    print("Cleared pacman's cache.")
 
-    @staticmethod
-    def yaourt() -> None:
-        """Clean yaourt."""
+    # View pacdiff
+    print('Viewing pacdiff...')
+    run(('sudo', 'pacdiff'))
+    print('Viewed pacdiff.')
 
-        logging.info("Removing yaourt's orphan packages...")
-        run(('yaourt', '-Qdtq'))
-        logging.info("Removed yaourt's orphan packages.")
+    print('Cleaned pacman.')
 
-    @staticmethod
-    def jetbrains() -> None:
-        """Clean JetBrains application configurations."""
 
-        logging.info("Removing JetBrains applications' configurations...")
-        for path in Path.home().glob('.*/**/JetBrains'):
-            shutil.rmtree(path)
-        shutil.rmtree(Path(f'{str(Path.home())}/.java'))
-        logging.info("Removed JetBrains applications' configurations.")
+def yaourt() -> None:
+    """Clean yaourt."""
+
+    print("Removing yaourt's orphan packages...")
+    run(('yaourt', '-Qdtq'))
+    print("Removed yaourt's orphan packages.")
+
+
+def jetbrains() -> None:
+    """Clean JetBrains application configurations."""
+
+    print("Removing JetBrains applications' configurations...")
+    for path in Path.home().glob('.*/**/JetBrains'):
+        shutil.rmtree(path)
+    shutil.rmtree(Path(f'{str(Path.home())}/.java'))
+    print("Removed JetBrains applications' configurations.")
 
 
 if __name__ == '__main__':
-    logging.basicConfig(
-        format='[%(levelname)s] [%(asctime)s]: %(msg)s',
-        level=logging.INFO
+    main_parser: ArgumentParser = ArgumentParser(
+        prog='clean',
+        description='A script to clean the system.',
+        allow_abbrev=False
     )
 
-    parser = namedtuple('Parser', ('main', 'subparser', 'subparsers'))(
-        main := ArgumentParser(
-            prog='clean',
-            description='A script to clean the system.',
-            epilog='Goodbye, world!',
-            allow_abbrev=False
-        ),
-        main.add_subparsers(
-            title='Action',
-            description='The action to take.',
-            dest='action',
-            required=True
-        ),
-        SimpleNamespace()
-    )
-
-    # all
-    parser.subparsers.all = parser.subparser.add_parser(
+    all_subparser: ArgumentParser = main_parser.add_subparsers(
+        title='Action',
+        description='The action to take.',
+        dest='action',
+        required=True
+    ).add_parser(
         'all',
         description='Clean the system.',
-        epilog='Clean all!',
         add_help=True,
         allow_abbrev=False
     )
-    parser.subparsers.all.add_argument(
-        '--jetbrains',
-        action='store_true',
-        help="Clean jetbrains applications' configurations."
-    )
-    parser.subparsers.all.add_argument(
-        '--bleachbit-root',
-        action='store_true',
-        help="Clean the system's configurations using bleachbit."
-    )
 
-    arguments = parser.main.parse_args()
+    arguments: Namespace = main_parser.parse_args()
 
     if arguments.action == 'all':
-        if arguments.bleachbit_root:
-            Clean.bleachbit(root=True)
+        bleachbit(root=True)
 
-        Clean.bleachbit()
-        Clean.system()
-        Clean.pacman()
-        Clean.yaourt()
+        bleachbit()
 
-        if arguments.jetbrains:
-            Clean.jetbrains()
+        system()
+
+        pacman()
+
+        yaourt()
+
+        jetbrains()
