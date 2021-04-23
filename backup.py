@@ -3,13 +3,30 @@
 import tarfile
 from argparse import ArgumentParser, Namespace
 from collections import namedtuple
+from contextlib import contextmanager
 from datetime import date, datetime
-from os import getcwd
+from os import chdir, getcwd
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Tuple
 
-from utilities import cd
+
+@contextmanager
+def cd(destination: str) -> None:
+    """
+    A context manager to change directory. Mimics unix's cd.
+
+    Args:
+        destination (str): The directory to cd into.
+    """
+    current_working_directory = getcwd()
+
+    try:
+        chdir(destination)
+        yield
+    finally:
+        chdir(current_working_directory)
+
 
 if __name__ == '__main__':
     today: date = datetime.today().date()
@@ -82,7 +99,7 @@ if __name__ == '__main__':
 
         with tarfile.open(filepath, 'w:gz') as backup_file:
             for file in files:
-                with cd(file.parent):
+                with cd(str(file.parent)):
                     print(f'Backing up {file}...')
                     backup_file.add(file.name)
 
