@@ -73,12 +73,12 @@ def pacman() -> None:
     print('Cleaned pacman.')
 
 
-def yaourt() -> None:
-    """Clean yaourt."""
+def pamac() -> None:
+    """Clean pamac."""
 
-    print("Removing yaourt's orphan packages...")
-    run(('yaourt', '-Qdtq'))
-    print("Removed yaourt's orphan packages.")
+    print("Removing pamac's orphan packages...")
+    run(('pamac', 'remove', '--orphans'))
+    print("Removed pamac's orphan packages.")
 
 
 def jetbrains() -> None:
@@ -121,6 +121,6 @@ if __name__ == '__main__':
 
         pacman()
 
-        yaourt()
+        pamac()
 
         jetbrains()
