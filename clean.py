@@ -56,7 +56,7 @@ def pacman() -> None:
     # Remove pacman's orphan packages
     print("Removing pacman's orphan packages...")
     orphans: Generator[str] = (orphan.strip() for orphan in
-                                    run(('pacman', '-Qdtq'), stdout=PIPE).stdout.decode('utf-8').split())
+                               run(('pacman', '-Qdtq'), stdout=PIPE).stdout.decode('utf-8').split())
     run(('sudo', 'pacman', '-Rs', *orphans))
     print("Removed pacman's orphan packages.")
 
