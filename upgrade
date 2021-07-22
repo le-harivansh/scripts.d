@@ -41,6 +41,6 @@ if __name__ == '__main__':
         run(('sudo', 'pacman', '-Syyu'), check=True)
 
         print("Upgrading AUR's packages...")
-        run(('pacaur', '-Syuua'), check=True)
+        run(('yay'), check=True)
 
         print('Upgrade complete.')
