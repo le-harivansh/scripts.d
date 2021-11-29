@@ -81,16 +81,6 @@ def pamac() -> None:
     print("Removed pamac's orphan packages.")
 
 
-def jetbrains() -> None:
-    """Clean JetBrains application configurations."""
-
-    print("Removing JetBrains applications' configurations...")
-    for path in Path.home().glob('.*/**/JetBrains'):
-        shutil.rmtree(path)
-    shutil.rmtree(Path(f'{str(Path.home())}/.java'))
-    print("Removed JetBrains applications' configurations.")
-
-
 if __name__ == '__main__':
     main_parser: ArgumentParser = ArgumentParser(
         prog='clean',
@@ -122,5 +112,3 @@ if __name__ == '__main__':
         pacman()
 
         pamac()
-
-        jetbrains()
