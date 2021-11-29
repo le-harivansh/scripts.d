@@ -7,6 +7,7 @@ from contextlib import contextmanager
 from datetime import date, datetime
 from os import chdir, getcwd
 from pathlib import Path
+from subprocess import run
 from types import SimpleNamespace
 from typing import Tuple
 
@@ -31,11 +32,11 @@ def cd(destination: str) -> None:
 if __name__ == '__main__':
     today: date = datetime.today().date()
     parser = namedtuple('Parser', ('main', 'subparser', 'subparsers'))(
-        main := ArgumentParser(
+        (main := ArgumentParser(
             prog='backup',
             description='A script to backup important files.',
             allow_abbrev=False
-        ),
+        )),
         main.add_subparsers(
             title='Action',
             description='The action to take.',
@@ -55,12 +56,13 @@ if __name__ == '__main__':
     parser.subparsers.all.add_argument(
         '--destination',
         default=getcwd(),
-        help='The path to the directory which will contain the backed-up archive.'
+        help='The path to the directory which will contain the backed-up archive (defaults to the current working directory).'
     )
+    DEFAULT_BACKUP_FILENAME: str = f'backup__{today.year}_{today.month:02d}_{today.day:02d}.tar.gz'
     parser.subparsers.all.add_argument(
         '--filename',
-        default=f'backup__{today.year}_{today.month:02d}_{today.day:02d}.tar.gz',
-        help='The name of the tar archive.'
+        default=DEFAULT_BACKUP_FILENAME,
+        help=f'The name of the tar archive (defaults to {DEFAULT_BACKUP_FILENAME}).'
     )
 
     # list
@@ -71,14 +73,14 @@ if __name__ == '__main__':
         allow_abbrev=False
     )
 
+    PASSWORDS_STORE_PATH: Path = Path(f'{Path.home()}/.password-store')
     files: Tuple[Path, ...] = (
         Path(f'{Path.home()}/.gnupg'),
-        Path(f'{Path.home()}/.password-store'),
+        PASSWORDS_STORE_PATH,
         Path(f'{Path.home()}/.ssh'),
         Path(f'{Path.home()}/.vimrc'),
         Path(f'{Path.home()}/.zshenv'),
         Path(f'{Path.home()}/.zshrc'),
-        Path(f'{Path.home()}/.backup'),
         Path(f'{Path.home()}/Storage/Documents'),
     )
 
@@ -95,6 +97,12 @@ if __name__ == '__main__':
         if (filepath := Path(f'{arguments.destination}/{arguments.filename}')).is_file():
             raise RuntimeError(f'The file: {arguments.filename} already exists in {arguments.destination}.')
 
+        # back up passwords
+        PASSWORDS_FILE_NAME = 'passwords.txt'
+
+        run((Path(f'{getcwd()}/passwords'), 'export', '--to', PASSWORDS_STORE_PATH, '--filename', PASSWORDS_FILE_NAME))
+
+        # back up other data
         print(f'Backing up the data to: {filepath}...')
 
         with tarfile.open(filepath, 'w:gz') as backup_file:
@@ -102,6 +110,9 @@ if __name__ == '__main__':
                 with cd(str(file.parent)):
                     print(f'Backing up {file}...')
                     backup_file.add(file.name)
+
+        # remove passwords file
+        Path(f'{PASSWORDS_STORE_PATH}/{PASSWORDS_FILE_NAME}').unlink()
 
         print('Backup complete.')
 
