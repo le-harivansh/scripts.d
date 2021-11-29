@@ -6,7 +6,7 @@ from subprocess import run
 if __name__ == '__main__':
     main_parser: ArgumentParser = ArgumentParser(
         prog='upgrade',
-        description='A script to upgrade the system, and its packages.',
+        description='A script to upgrade the system and its packages.',
         allow_abbrev=False
     )
 
