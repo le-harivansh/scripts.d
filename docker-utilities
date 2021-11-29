@@ -8,11 +8,11 @@ from typing import Tuple
 
 if __name__ == '__main__':
     parser = namedtuple('Parser', ('main', 'subparser', 'subparsers'))(
-        main := ArgumentParser(
+        (main := ArgumentParser(
             prog='docker-utilities',
             description='A script for high-level docker-management.',
             allow_abbrev=False
-        ),
+        )),
         main.add_subparsers(
             title='Action',
             description='The action to take.',
