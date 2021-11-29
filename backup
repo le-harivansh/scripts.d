@@ -73,10 +73,10 @@ if __name__ == '__main__':
         allow_abbrev=False
     )
 
-    PASSWORDS_STORE_PATH: Path = Path(f'{Path.home()}/.password-store')
     files: Tuple[Path, ...] = (
+        (BACKUP_DIRECTORY_PATH := Path(f'{Path.home()}/.backup')),
         Path(f'{Path.home()}/.gnupg'),
-        PASSWORDS_STORE_PATH,
+        Path(f'{Path.home()}/.password-store'),
         Path(f'{Path.home()}/.ssh'),
         Path(f'{Path.home()}/.vimrc'),
         Path(f'{Path.home()}/.zshenv'),
@@ -100,7 +100,7 @@ if __name__ == '__main__':
         # back up passwords
         PASSWORDS_FILE_NAME = 'passwords.txt'
 
-        run((Path(f'{getcwd()}/passwords'), 'export', '--to', PASSWORDS_STORE_PATH, '--filename', PASSWORDS_FILE_NAME))
+        run((Path(f'{Path(__file__).parent}/passwords'), 'export', '--to', BACKUP_DIRECTORY_PATH, '--filename', PASSWORDS_FILE_NAME))
 
         # back up other data
         print(f'Backing up the data to: {filepath}...')
@@ -112,7 +112,7 @@ if __name__ == '__main__':
                     backup_file.add(file.name)
 
         # remove passwords file
-        Path(f'{PASSWORDS_STORE_PATH}/{PASSWORDS_FILE_NAME}').unlink()
+        Path(f'{BACKUP_DIRECTORY_PATH}/{PASSWORDS_FILE_NAME}').unlink()
 
         print('Backup complete.')
 
