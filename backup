@@ -120,4 +120,4 @@ if __name__ == '__main__':
         print('The following files/directories will be backed up:')
 
         for file in files:
-            print(f'{file}')
+            print(file)
