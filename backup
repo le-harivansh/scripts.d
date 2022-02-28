@@ -82,6 +82,7 @@ if __name__ == '__main__':
         Path(f'{Path.home()}/.zshenv'),
         Path(f'{Path.home()}/.zshrc'),
         Path(f'{Path.home()}/Storage/Documents'),
+        Path(f'{Path.home()}/Storage/Pictures'),
     )
 
     for file in files:
