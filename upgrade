@@ -30,17 +30,18 @@ if __name__ == '__main__':
 
     arguments: Namespace = main_parser.parse_args()
 
-    if arguments.action == 'all':
-        print('Starting upgrade...')
+    match (arguments.action):
+        case 'all':
+            print('Starting upgrade...')
 
-        if arguments.refresh_mirrors:
-            print("Refreshing pacman's mirrors...")
-            run(('sudo', 'pacman-mirrors', '-f'), check=True)
+            if arguments.refresh_mirrors:
+                print("Refreshing pacman's mirrors...")
+                run(('sudo', 'pacman-mirrors', '-f'), check=True)
 
-        print("Upgrading pacman's packages...")
-        run(('sudo', 'pacman', '-Syyu'), check=True)
+            print("Upgrading pacman's packages...")
+            run(('sudo', 'pacman', '-Syyu'), check=True)
 
-        print("Upgrading AUR's packages...")
-        run(('yay'), check=True)
+            print("Upgrading AUR's packages...")
+            run(('yay'), check=True)
 
-        print('Upgrade complete.')
+            print('Upgrade complete.')
