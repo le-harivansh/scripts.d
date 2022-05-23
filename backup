@@ -31,6 +31,8 @@ def cd(destination: str) -> None:
 
 if __name__ == '__main__':
     today: date = datetime.today().date()
+    DEFAULT_BACKUP_FILENAME: str = f'backup__{today.year}_{today.month:02d}_{today.day:02d}.tar.gz'
+
     parser = namedtuple('Parser', ('main', 'subparser', 'subparsers'))(
         (main := ArgumentParser(
             prog='backup',
@@ -58,7 +60,6 @@ if __name__ == '__main__':
         default=getcwd(),
         help='The path to the directory which will contain the backed-up archive (defaults to the current working directory).'
     )
-    DEFAULT_BACKUP_FILENAME: str = f'backup__{today.year}_{today.month:02d}_{today.day:02d}.tar.gz'
     parser.subparsers.all.add_argument(
         '--filename',
         default=DEFAULT_BACKUP_FILENAME,
@@ -91,34 +92,35 @@ if __name__ == '__main__':
 
     arguments: Namespace = parser.main.parse_args()
 
-    if arguments.action == 'all':
-        if not Path(arguments.destination).is_dir():
-            raise RuntimeError(f'The destination: {arguments.destination} is not an existing directory.')
+    match (arguments.action):
+        case 'all':
+            if not Path(arguments.destination).is_dir():
+                raise RuntimeError(f'The destination: {arguments.destination} is not an existing directory.')
 
-        if (filepath := Path(f'{arguments.destination}/{arguments.filename}')).is_file():
-            raise RuntimeError(f'The file: {arguments.filename} already exists in {arguments.destination}.')
+            if (filepath := Path(f'{arguments.destination}/{arguments.filename}')).is_file():
+                raise RuntimeError(f'The file: {arguments.filename} already exists in {arguments.destination}.')
 
-        # back up passwords
-        PASSWORDS_FILE_NAME = 'passwords.txt'
+            # back up passwords
+            PASSWORDS_FILE_NAME = 'passwords.txt'
 
-        run((Path(f'{Path(__file__).parent}/passwords'), 'export', '--to', BACKUP_DIRECTORY_PATH, '--filename', PASSWORDS_FILE_NAME))
+            run((Path(f'{Path(__file__).parent}/passwords'), 'export', '--to', BACKUP_DIRECTORY_PATH, '--filename', PASSWORDS_FILE_NAME))
 
-        # back up other data
-        print(f'Backing up the data to: {filepath}...')
+            # back up other data
+            print(f'Backing up the data to: {filepath}...')
 
-        with tarfile.open(filepath, 'w:gz') as backup_file:
+            with tarfile.open(filepath, 'w:gz') as backup_file:
+                for file in files:
+                    with cd(str(file.parent)):
+                        print(f'Backing up {file}...')
+                        backup_file.add(file.name)
+
+            # remove passwords file
+            Path(f'{BACKUP_DIRECTORY_PATH}/{PASSWORDS_FILE_NAME}').unlink()
+
+            print('Backup complete.')
+
+        case 'list':
+            print('The following files/directories will be backed up:')
+
             for file in files:
-                with cd(str(file.parent)):
-                    print(f'Backing up {file}...')
-                    backup_file.add(file.name)
-
-        # remove passwords file
-        Path(f'{BACKUP_DIRECTORY_PATH}/{PASSWORDS_FILE_NAME}').unlink()
-
-        print('Backup complete.')
-
-    elif arguments.action == 'list':
-        print('The following files/directories will be backed up:')
-
-        for file in files:
-            print(file)
+                print(file)
