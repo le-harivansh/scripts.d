@@ -87,7 +87,7 @@ if __name__ == '__main__':
         allow_abbrev=False
     )
 
-    all_subparser: ArgumentParser = main_parser.add_subparsers(
+    main_parser.add_subparsers(
         title='Action',
         description='The action to take.',
         dest='action',
@@ -101,13 +101,14 @@ if __name__ == '__main__':
 
     arguments: Namespace = main_parser.parse_args()
 
-    if arguments.action == 'all':
-        bleachbit(root=True)
+    match(arguments.action):
+        case 'all':
+            bleachbit(root=True)
 
-        bleachbit()
+            bleachbit()
 
-        system()
+            system()
 
-        pacman()
+            pacman()
 
-        pamac()
+            pamac()
