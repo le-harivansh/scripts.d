@@ -1,6 +1,7 @@
 #! /usr/bin/env zsh
 
 case ${1} in
+
   purge)
     echo ""
     echo "Stopping all containers..."
