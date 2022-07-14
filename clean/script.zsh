@@ -28,14 +28,14 @@ fi
 echo ""
 echo "Cleaning the system-space using bleachbit..."
 echo ""
-sudo bleachbit --clean $(bleachbit --list-cleaners | sed '/system\.memory/d' | sed '/system\.free_disk_space/d')
+sudo bleachbit --clean $(bleachbit --list-cleaners | sed --expression '/system\.memory/d' --expression '/system\.free_disk_space/d')
 echo ""
 echo ""
 
 echo ""
 echo "Cleaning the user-space using bleachbit..."
 echo ""
-bleachbit --clean $(bleachbit --list-cleaners | sed '/system\.memory/d' | sed '/system\.free_disk_space/d')
+bleachbit --clean $(bleachbit --list-cleaners | sed --expression '/system\.memory/d' --expression '/system\.free_disk_space/d')
 echo ""
 echo ""
 
