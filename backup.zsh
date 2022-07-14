@@ -1,28 +1,5 @@
 #! /usr/bin/env zsh
 
-if [ "${#}" -gt 0 ]
-then
-  case ${1} in
-
-    -h | --help | *)
-      echo ""
-      echo "NAME"
-      echo -e "\t${0} - A script to back up files on the system."
-      echo ""
-      echo "SYNOPSIS"
-      echo -e "\t${0} [OPTIONS]"
-      echo ""
-      echo "OPTIONS"
-      echo -e "\t-h | --help : Print this help message."
-      echo ""
-
-      exit 0
-      ;;
-
-  esac
-fi
-
-
 echo ""
 echo "Decrypting passwords..."
 echo ""
