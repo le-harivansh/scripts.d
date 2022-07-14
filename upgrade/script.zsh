@@ -48,6 +48,13 @@ echo ""
 echo ""
 
 echo ""
+echo "Checking pacdiff..."
+echo ""
+sudo pacdiff
+echo ""
+echo ""
+
+echo ""
 echo "Upgrade complete."
 echo ""
 echo ""
