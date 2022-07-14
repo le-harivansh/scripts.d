@@ -1,5 +1,5 @@
 # scripts.d
 
-This repository contains scripts to automate frequent tasks.
+This repository contains scripts to automate some of my frequent tasks.
 
-See each script for further information.
+The scripts are simple and easy to understand.
