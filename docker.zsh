@@ -58,6 +58,11 @@ case ${1} in
       echo ""
       echo ""
     fi
+
+    echo ""
+    echo "Docker cleanup complete."
+    echo ""
+    echo ""
     ;;
 
   list)

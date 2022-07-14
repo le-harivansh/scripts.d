@@ -33,6 +33,7 @@ then
   esac
 fi
 
+
 echo ""
 echo "Upgrading pacman's packages..."
 echo ""
