@@ -18,12 +18,12 @@ echo ""
 echo ""
 
 
-local backup_file="backup.$(date +%s).tar.bz2"
+local backup_file="$(date '+%Y-%m-%d.%s').tar.bz2"
 
 echo ""
 echo "Backing up files..."
 echo ""
-tar --dereference --create --verbose --bzip2 --exclude '.directory' --file ${backup_file} ${passwords_file} --directory ${HOME} .vimrc .zshenv .zshrc Documents Pictures
+tar --dereference --create --verbose --bzip2 --exclude '.directory' --file ${backup_file} ${passwords_file} --directory ${HOME} Documents Pictures
 echo ""
 echo ""
 
