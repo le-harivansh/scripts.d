@@ -1,5 +1,7 @@
 #! /usr/bin/env zsh
 
+set -e
+
 if [ "${#}" -gt 0 ]
 then
   case ${1} in
