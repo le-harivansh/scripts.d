@@ -3,95 +3,66 @@
 case ${1} in
 
   purge)
-    echo ""
     echo "Stopping all containers..."
 
     if [ "$(docker container list --quiet)" ]
     then
-      echo ""
       docker container kill $(docker container list --quiet)
-      echo ""
       echo ""
     fi
 
 
-    echo ""
     echo "Removing all containers..."
 
     if [ "$(docker container list --all --quiet)" ]
     then
-      echo ""
       docker container rm --force --volumes $(docker container list --all --quiet)
-      echo ""
       echo ""
     fi
 
-    echo ""
     echo "Removing all images..."
 
     if [ "$(docker image list --all --quiet)" ]
     then
-      echo ""
       docker image rm --force $(docker image list --all --quiet)
-      echo ""
       echo ""
     fi
 
-    echo ""
     echo "Removing all volumes..."
 
     if [ "$(docker volume list --quiet)" ]
     then
-      echo ""
       docker volume rm --force $(docker volume list --quiet)
-      echo ""
       echo ""
     fi
 
-    echo ""
     echo "Removing all networks..."
 
     if [ "$(docker network list --quiet)" ]
     then
-      echo ""
       docker network rm $(docker network list --quiet)
-      echo ""
       echo ""
     fi
 
-    echo ""
     echo "Docker cleanup complete."
-    echo ""
     echo ""
     ;;
 
   list)
-    echo ""
     echo "*** CONTAINERS ***"
-    echo ""
     docker container list --all
     echo ""
-    echo ""
 
-    echo ""
     echo "*** IMAGES ***"
-    echo ""
     docker image list --all
     echo ""
-    echo ""
 
-    echo ""
     echo "*** VOLUMES ***"
-    echo ""
     docker volume list
     echo ""
-    echo ""
 
-    echo ""
     echo "*** NETWORKS ***"
-    echo ""
     docker network list
-    echo ""
     echo ""
     ;;
 
