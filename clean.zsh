@@ -44,6 +44,9 @@ echo ""
 echo ""
 
 
+# clean docker
+
+
 echo ""
 echo "Cleanup complete."
 echo ""
