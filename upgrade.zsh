@@ -5,11 +5,8 @@ then
   case ${1} in
 
     -r | --refresh-mirrors)
-      echo ""
       echo "Refreshing pacman's mirrors..."
-      echo ""
       sudo pacman-mirrors --fasttrack
-      echo ""
       echo ""
       ;;
 
@@ -34,28 +31,17 @@ then
 fi
 
 
-echo ""
 echo "Upgrading pacman's packages..."
-echo ""
 sudo pacman -Syyu
 echo ""
-echo ""
 
-echo ""
 echo "Upgrading AUR's packages..."
-echo ""
 yay
 echo ""
-echo ""
 
-echo ""
 echo "Checking pacdiff..."
-echo ""
 sudo pacdiff
 echo ""
-echo ""
 
-echo ""
 echo "Upgrade complete."
-echo ""
 echo ""
