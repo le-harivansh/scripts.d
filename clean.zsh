@@ -27,9 +27,42 @@ echo ""
 
 local docker_utilities_script="docker.zsh"
 
-# docker
+# Docker
 echo "Cleaning docker..."
-"${0:a:h}/${docker_utilities_script}" purge
+echo "Stopping all docker containers..."
+if [ "$(docker container list --quiet)" ]
+then
+  docker container kill $(docker container list --quiet)
+fi
 echo ""
+
+echo "Removing all docker containers..."
+if [ "$(docker container list --all --quiet)" ]
+then
+  docker container rm --force --volumes $(docker container list --all --quiet)
+fi
+echo ""
+
+echo "Removing all docker images..."
+if [ "$(docker image list --all --quiet)" ]
+then
+  docker image rm --force $(docker image list --all --quiet)
+fi
+echo ""
+
+echo "Removing all docker volumes..."
+if [ "$(docker volume list --quiet)" ]
+then
+  docker volume rm --force $(docker volume list --quiet)
+fi
+echo ""
+
+echo "Removing all docker networks..."
+for docker_network in $(docker network list --format '{{.Name}}')
+do
+  ([ ${docker_network} != 'host' ] && [ ${docker_network} != 'bridge' ] && [ ${docker_network} != 'none' ]) && docker network rm ${docker_network}
+done
+echo ""
+echo "Docker cleanup complete."
 
 echo "Cleanup complete."
