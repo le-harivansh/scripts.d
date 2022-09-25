@@ -7,41 +7,41 @@ set -a
 source "${0:a:h}/.env"
 set +a
 
-[ -z ${BACKUP_GPG_ENCRYPTION_PASSPHRASE} ] && echo "The BACKUP_GPG_ENCRYPTION_PASSPHRASE variable should be set." && exit 1
+[ -z "${BACKUP_GPG_ENCRYPTION_PASSPHRASE}" ] && echo "The BACKUP_GPG_ENCRYPTION_PASSPHRASE variable should be set." && exit 1
 
-local working_directory="$(mktemp -d)"
+TEMPORARY_WORKING_DIRECTORY="$(mktemp -d)"
 
-echo "Going into ${working_directory}..."
-pushd ${working_directory}
+echo "Going into ${TEMPORARY_WORKING_DIRECTORY}..."
+pushd "${TEMPORARY_WORKING_DIRECTORY}"
 
-local password_store_location="${HOME}/.password-store"
-local passwords_file="passwords.txt"
+PASSWORD_STORE_PATH="${HOME}/.password-store"
+PASSWORDS_BACKUP_FILE="passwords.txt"
 
 echo "Decrypting passwords..."
-for password_file_path in ${password_store_location}/**/*.gpg
+for ENCRYPTED_PASSWORD_FILE in "${PASSWORD_STORE_PATH}"/**/*.gpg
 do
-  local username="$(echo ${password_file_path} | sed --expression "s#${password_store_location}/##g" --expression 's#\.gpg##g')"
+  PASSWORD_PATH="$(echo "${ENCRYPTED_PASSWORD_FILE}" | sed --expression "s#${PASSWORD_STORE_PATH}/##g" --expression 's#\.gpg##g')"
 
-  echo "${username} $(pass ${username})" >> ${passwords_file}
+  echo "${PASSWORD_PATH} $(pass "${PASSWORD_PATH}")" >> ${PASSWORDS_BACKUP_FILE}
 done
 
-local backup_file="$(date '+%Y-%m-%d.%s').tar.bz2"
+BACKUP_FILE="$(date '+%Y-%m-%d.%s').tar.bz2"
 
 echo "Backing up files:"
-tar --dereference --create --verbose --bzip2 --exclude '.directory' --file ${backup_file} ${passwords_file} --directory ${HOME} Documents Pictures
+tar --dereference --create --verbose --bzip2 --exclude '.directory' --file "${BACKUP_FILE}" ${PASSWORDS_BACKUP_FILE} --directory "${HOME}" Documents Pictures
 
 echo "Encrypting backup file..."
-gpg --sign --symmetric --no-symkey-cache --batch --pinentry-mode loopback --passphrase "${BACKUP_GPG_ENCRYPTION_PASSPHRASE}" ${backup_file}
+gpg --sign --symmetric --no-symkey-cache --batch --pinentry-mode loopback --passphrase "${BACKUP_GPG_ENCRYPTION_PASSPHRASE}" "${BACKUP_FILE}"
 
-local encrypted_backup_file="${backup_file}.gpg"
+ENCRYPTED_BACKUP_FILE="${BACKUP_FILE}.gpg"
 
 echo "Going back to the previous working directory..."
 popd
 
-echo "Moving ${working_directory}/${encrypted_backup_file} to $(pwd)..."
-mv "${working_directory}/${encrypted_backup_file}" .
+echo "Moving ${TEMPORARY_WORKING_DIRECTORY}/${ENCRYPTED_BACKUP_FILE} to $(pwd)..."
+mv "${TEMPORARY_WORKING_DIRECTORY}/${ENCRYPTED_BACKUP_FILE}" .
 
 echo "Cleaning up..."
-rm -rf ${working_directory}
+rm -rf "${TEMPORARY_WORKING_DIRECTORY}"
 
 echo "Backup complete."
