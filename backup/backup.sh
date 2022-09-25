@@ -1,10 +1,10 @@
-#! /usr/bin/env zsh
+#! /usr/bin/env bash
 
 set -e
 
 echo "Sourcing environment variables..."
 set -a
-source "${0:a:h}/.env"
+source "$(dirname -- "${0}")/.env"
 set +a
 
 [ -z "${BACKUP_GPG_ENCRYPTION_PASSPHRASE}" ] && echo "The BACKUP_GPG_ENCRYPTION_PASSPHRASE variable should be set." && exit 1
