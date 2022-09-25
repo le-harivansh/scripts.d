@@ -25,8 +25,6 @@ echo "Clearing pacman's cache..."
 sudo pacman --sync --clean --clean
 echo ""
 
-local docker_utilities_script="docker.zsh"
-
 # Docker
 echo "Cleaning docker..."
 echo "Stopping all docker containers..."
