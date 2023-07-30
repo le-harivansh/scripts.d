@@ -18,12 +18,14 @@ PASSWORD_STORE_PATH="${HOME}/.password-store"
 PASSWORDS_BACKUP_FILE="passwords.txt"
 
 echo "Decrypting passwords..."
+shopt -s globstar # enable globstar
 for ENCRYPTED_PASSWORD_FILE in "${PASSWORD_STORE_PATH}"/**/*.gpg
 do
   PASSWORD_PATH="$(echo "${ENCRYPTED_PASSWORD_FILE}" | sed --expression "s#${PASSWORD_STORE_PATH}/##g" --expression 's#\.gpg##g')"
 
   echo "${PASSWORD_PATH} $(pass "${PASSWORD_PATH}")" >> ${PASSWORDS_BACKUP_FILE}
 done
+shopt -u globstar # disable globstar
 
 BACKUP_FILE="$(date '+%Y-%m-%d.%s').tar.bz2"
 
