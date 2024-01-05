@@ -47,3 +47,5 @@ echo "Cleaning up..."
 rm -rf "${TEMPORARY_WORKING_DIRECTORY}"
 
 echo "Backup complete."
+
+echo "To decrypt the archive, use: \`gpg --output ${BACKUP_FILE} --decrypt ${ENCRYPTED_BACKUP_FILE} && tar -xvf ${BACKUP_FILE}\`"
